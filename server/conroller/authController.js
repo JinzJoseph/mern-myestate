@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import User from "../models/usermodel.js";
 
-export const signup = async (req, res) => {
+export const signup = async (req, res,next) => {
     try {
      
       
@@ -16,11 +16,8 @@ export const signup = async (req, res) => {
         success: true,
       });
     } catch (error) {
-      console.log(error);
-      res.status(500).send({
-        success: false,
-        message: `signup controller ${error.message}`,
-      });
+      next(error)
+     
     }
   };
   
