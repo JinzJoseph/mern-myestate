@@ -28,7 +28,7 @@ const {email,password}=req.body
 
 try {
   const validUser=await User.findOne({email:email})
-  if(!validUser)
+  if(! validUser)
   {
     return res.status(401).send({
       message:'invalid User'

@@ -3,25 +3,22 @@ import axios from "axios";
 
 import { Link ,useNavigate} from "react-router-dom";
 const Signup = () => {
-  const [fromData, SetFormData] = useState({});
+  
   const [error, SetError] = useState("");
   const [loading, SetLoading] = useState(false);
   const navigate=useNavigate()
-  const handleChange = (e) => {
-    SetFormData({
-      ...fromData,
-      [e.target.id]: e.target.value,
-    });
-  };
-  console.log(fromData);
+  const[username,SetUsername]=useState("")
+  const [email,SetEmail]=useState("")
+  const [password,SetPassword]=useState("")
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     SetLoading(true);
     try {
-      const res = await axios.post(
+      const data = await axios.post(
         "/api/auth/signup",
         {
-          body: JSON.stringify(fromData),
+          username,email,password
         }, // Corrected variable name
         {
           headers: {
@@ -29,7 +26,7 @@ const Signup = () => {
           },
         }
       );
-      const data = await res.json();
+  
       if (data.succes == false) {
         SetLoading(false);
         SetError(data.message);
@@ -54,21 +51,21 @@ const Signup = () => {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
-          onChange={handleChange}
+          onChange={(e)=>{SetUsername(e.target.value)}}
           className="border p-3 rounded-lg"
           id="username"
           type="text"
           placeholder="username"
         />
         <input
-          onChange={handleChange}
+          onChange={(e)=>{SetEmail(e.target.value)}}
           className="border p-3 rounded-lg"
           id="email"
           type="email"
           placeholder="email"
         />
         <input
-          onChange={handleChange}
+           onChange={(e)=>{SetPassword(e.target.value)}}
           className="border p-3 rounded-lg"
           id="password"
           type="password"
