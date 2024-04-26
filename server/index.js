@@ -3,15 +3,20 @@ import connectDB from "./config/db.js"; // Assuming db.js is located in the conf
 import userRoute from "./routes/userRoute.js";
 import authRoute from "./routes/authRoute.js"
 import bodyParser from "body-parser";
+import cors from 'cors'
+import dotenv from "dotenv"
 const app = express();
 
-connectDB();
+
 
 app.listen(3000, () => {
   console.log("server is running on port 3000");
 });
-
+app.use(cors())
 app.use(bodyParser.json())
+dotenv.config()
+connectDB();
+
 app.use("/api/user",userRoute)
 app.use("/api/auth",authRoute)
 
