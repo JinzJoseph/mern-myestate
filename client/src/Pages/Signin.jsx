@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux"
 
 import {signInFailure,signInSuccess ,signInStart} from "../../redux/user/userSlice"
 import { Link ,useNavigate} from "react-router-dom";
+import OAuth from '../Components/OAuth';
 const Signin = () => {
  
 const { loading,error}=useSelector(state=>state.user)
@@ -70,6 +71,7 @@ const dispatch=useDispatch()
             loading  ? 'Loading....' :"signin"
           }
         </button>
+        <OAuth/>
       </form>
       <div className="flex gap-2 mt-5 ">
         <p>Dont an account?</p>
