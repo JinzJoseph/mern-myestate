@@ -28,14 +28,14 @@ const dispatch=useDispatch()
           },
         }
       );
-   
+      
       if (data.succes == false) {
         dispatch(signInFailure(data.message))
     
         return;
       }
-     
-     dispatch(signInSuccess(data))
+  
+     dispatch(signInSuccess(data.data))
       navigate('/')
     } catch (error) {
       dispatch(signInFailure(error.message))
