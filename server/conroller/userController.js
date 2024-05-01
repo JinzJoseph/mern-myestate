@@ -48,3 +48,25 @@ export const updateUser = async (req, res) => {
     });
   }
 };
+export const deleteUser = async (req, res, next) => {
+  //console.log(req.params.id);
+  if (req.user.id !== req.params.id)
+    return res.status(401).json({
+      message: "You can only delete your own account",
+      success: false,
+    });
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.clearCookie("access_token"); // Corrected method name to clearCookie
+    res.status(200).json({
+      message: "User has been successfully deleted",
+      success: true,
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({
+      message: "Server Error",
+      success: false,
+    });
+  }
+};
