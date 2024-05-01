@@ -1,8 +1,9 @@
 import express from 'express'
-import { signup ,signin, google } from '../conroller/authController.js'
+import { signup ,signin, google, signout } from '../conroller/authController.js'
 
 const router=express.Router()
 router.post("/signup",signup)
 router.post("/signin",signin)
 router.post("/google",google)
+router.get('/signout',signout)
 export default router;

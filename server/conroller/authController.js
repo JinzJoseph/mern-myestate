@@ -86,3 +86,15 @@ export const google = async (req, res) => {
     res.status(500).json({ error: 'Server Error' });
   }
 };
+export const signout=async(req,res,next)=>{
+  try {
+    res.clearCookie('access_token')
+    res.status(200).json({
+      message:"User has been logged out",
+      success:true
+    })
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ error: 'Server Error' });
+  }
+}

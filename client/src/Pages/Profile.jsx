@@ -14,6 +14,9 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
+  signoutStart,
+  signOutFailure,
+  signoutSuccess,
 } from "../../redux/user/userSlice";
 import axios from "axios";
 
@@ -108,9 +111,25 @@ const Profile = () => {
         return;
       }
       dispatch(deleteUserSuccess(res));
-
     } catch (error) {
       dispatch(deleteUserFailure(error.message));
+    }
+  };
+  const handleSignOut = async () => {
+    try {
+      dispatch(signoutStart());
+      const res = await axios.get("/api/auth/signout", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.success === false) {
+        dispatch(signOutFailure(res.message));
+        return
+      }
+      dispatch(signoutSuccess(res));
+    } catch (error) {
+      dispatch(signOutFailure(error.message));
     }
   };
   return (
@@ -188,7 +207,9 @@ const Profile = () => {
         >
           Delete Account
         </span>
-        <span className="text-red-700 cursor-pointer">Sign out</span>
+        <span className="text-red-700 cursor-pointer" onClick={handleSignOut}>
+          Sign out
+        </span>
       </div>
     </div>
   );
