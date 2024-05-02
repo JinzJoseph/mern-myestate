@@ -2,6 +2,7 @@ import express from "express";
 import connectDB from "./config/db.js"; // Assuming db.js is located in the config folder
 import userRoute from "./routes/userRoute.js";
 import authRoute from "./routes/authRoute.js"
+import listRoute from "./routes/listRoute.js"
 import bodyParser from "body-parser";
 import cors from 'cors'
 import cookieParser from "cookie-parser";
@@ -21,6 +22,7 @@ connectDB();
 
 app.use("/api/user",userRoute)
 app.use("/api/auth",authRoute)
+app.use("/api/list",listRoute)
 
 app.use((err,req,res,next)=>{
 const statusCode=err.statusCode || 500

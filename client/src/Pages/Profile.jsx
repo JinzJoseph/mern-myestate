@@ -19,6 +19,7 @@ import {
   signoutSuccess,
 } from "../../redux/user/userSlice";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   const fileRef = useRef(null);
@@ -199,6 +200,11 @@ const Profile = () => {
         >
           Update
         </button>
+        <Link className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-80"
+        to={'/create-listing'}
+        >
+        create Listing
+        </Link>
       </form>
       <div className="flex justify-between mt-5">
         <span
