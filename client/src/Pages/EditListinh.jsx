@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   getDownloadURL,
   getStorage,
@@ -8,12 +8,14 @@ import {
 import axios from "axios";
 import { app } from "../Firebase/Firebase";
 import { useSelector } from "react-redux";
-import {useNavigate} from "react-router-dom"
-const CreateListing = () => {
+import { useParams,useNavigate } from "react-router-dom";
+
+const EditListinh = () => {
+  const params=useParams()
   const [files, SetFiles] = useState([]);
 const { currentUser}=useSelector((state)=>state.user)
   const [imageUrls, setImageUrls] = useState([]);
-  console.log(imageUrls);
+  //console.log(imageUrls);
   const navigate=useNavigate()
   const [formData, setFormData] = useState({
 
@@ -112,7 +114,7 @@ const { currentUser}=useSelector((state)=>state.user)
         return console.log("discounted price must be lower than regular price");
       }
       const result = await axios.post(
-        "/api/list/create",
+        `/api/list/updatelist/${params.id}`,
         {
             ...formData,useRef:currentUser._id,imageUrls
         },
@@ -122,23 +124,39 @@ const { currentUser}=useSelector((state)=>state.user)
           },
         }
       );
-      console.log(result)
-      // console.log(result.data);
+      console.log(result);
       if (result.data.success === false) {
         console.log(result.data.message);
       }else{
         navigate(`/listing/${result.data._id}`);
-        console.log(result.data);
+       // console.log(result.data);
       }
     } catch (error) {
         console.log(result.data);
     }
   };
+  useEffect(()=>{
+    const fetchingData=async()=>{
+      const id=params.id
+      const res=await axios.get(`/api/list/get/${id}`)
+      console.log(res);
+      if(res.success===false){
+        console.log(res.message);
+        return
+      }
+      else{
+       // console.log(res);
+        setFormData(res.data.data)
+        setImageUrls(res.data.data.imageUrls)
+      }
+    }
+    fetchingData()
+  },[])
   return (
     <div className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
         {" "}
-        Create a Listing
+        Update a Listing
       </h1>
       <form
         onSubmit={handleSubmit}
@@ -339,7 +357,7 @@ const { currentUser}=useSelector((state)=>state.user)
             type="submit"
             className="p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-55"
           >
-            Create Listing
+            Update Listing
           </button>
         </div>
       </form>
@@ -347,4 +365,4 @@ const { currentUser}=useSelector((state)=>state.user)
   );
 };
 
-export default CreateListing;
+export default EditListinh;

@@ -22,6 +22,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 const Profile = () => {
+  const [userListing, SetUserListing] = useState([]);
   const fileRef = useRef(null);
   const { currentUser } = useSelector((state) => state.user);
   const [file, setFile] = useState(null);
@@ -126,11 +127,36 @@ const Profile = () => {
       });
       if (res.success === false) {
         dispatch(signOutFailure(res.message));
-        return
+        return;
       }
       dispatch(signoutSuccess(res));
     } catch (error) {
       dispatch(signOutFailure(error.message));
+    }
+  };
+  const handleShowListings = async () => {
+    try {
+      const res = await axios.get(`/api/user/userlist/${currentUser._id}`);
+      if (res.success === false) {
+        console.log("somethign is wromng");
+      }
+      const listings = res.data.data;
+      console.log(res.data.data);
+      SetUserListing(listings);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleListingDelete = async (id) => {
+    try {
+      const res = await axios.delete(`/api/list/delete/${id}`);
+      if (res.success === false) {
+        console.log(res.message);
+        return;
+      }
+      SetUserListing((prev) => prev.filter((listing) => listing._id !== id));
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -200,10 +226,11 @@ const Profile = () => {
         >
           Update
         </button>
-        <Link className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-80"
-        to={'/create-listing'}
+        <Link
+          className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-80"
+          to={"/create-listing"}
         >
-        create Listing
+          create Listing
         </Link>
       </form>
       <div className="flex justify-between mt-5">
@@ -217,6 +244,47 @@ const Profile = () => {
           Sign out
         </span>
       </div>
+      <button onClick={handleShowListings} className="text-green-700 w-full">
+        Show listings
+      </button>
+      {userListing && userListing.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <h1 className="text-center mt-7 text-2xl font-semibold">
+            your Listing
+          </h1>
+          {userListing.map((listing) => (
+            <div
+              key={listing._id}
+              className="border rounded-lg p-3 flex justify-between items-center gap-4"
+            >
+              <Link>
+                <img
+                  src={listing.imageUrls[0]}
+                  alt="listing cover"
+                  className="h-16 w-16 object-contain"
+                />
+              </Link>
+              <Link
+                className="text-slate-700 font-semibold  hover:underline truncate flex-1"
+                to={`/listing/${listing._id}`}
+              >
+                <p>{listing.name}</p>
+              </Link>
+              <div className="flex flex-col item-center">
+                <button
+                  onClick={() => handleListingDelete(listing._id)}
+                  className="text-red-700 uppercase"
+                >
+                  Delete
+                </button>
+                <Link to={`/update-listing/${listing._id}`}>
+                  <button className="text-green-700 uppercase">Edit</button>
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

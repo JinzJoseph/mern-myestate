@@ -1,3 +1,4 @@
+import Listing from "../models/listingmodel.js";
 import User from "../models/usermodel.js";
 import bcrypt from "bcrypt";
 export const test = (req, res) => {
@@ -5,7 +6,6 @@ export const test = (req, res) => {
     message: "hallo world",
   });
 };
-
 
 export const updateUser = async (req, res) => {
   try {
@@ -68,5 +68,21 @@ export const deleteUser = async (req, res, next) => {
       message: "Server Error",
       success: false,
     });
+  }
+};
+export const userList = async (req, res) => {
+  if (req.user.id === req.params.id) {
+    try {
+      const listings = await Listing.find({ useRef: req.params.id });
+      res.status(200).json({
+        success: true,
+        data: listings,
+      });
+    } catch (error) {
+      res.status(500).send({
+        message: "internal server error",
+        success: false,
+      });
+    }
   }
 };
