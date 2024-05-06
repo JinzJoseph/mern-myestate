@@ -94,3 +94,40 @@ export const updateList = async (req, res) => {
     });
   }
 };
+export const getListing=async(req,res)=>{
+  try {
+    const limit=parseInt(req.query.limit)|| 9;
+    const startindex=parseInt(req.query.StartIndex) || 0;
+    let offer =req.query.offer;
+    if(offer ===undefined || offer==="false"){
+      offer={$in:['false','true']}
+    }
+    let furnished=rq.query.furnished;
+    if(furnished===undefined || furnished==="false"){
+      furnished={ $in:["false","true"]}
+    }
+    let parking=req.query.parking;
+    if(parking===undefined || parking==='false'){
+      parking={$in:['true','false']}
+    }
+    let type=req.query.type;
+    if(type==undefined || type==='all'){
+      type={$in:['sale','rent']}
+    }
+    let searchItem=req.query.searchItem || " "
+    const order=req.query.order || "desc";
+    const sort=req.query.sort || "createdAt";
+    const listing =await Listing.find({
+      name:{$regrex:searchItem,$option:"i"},
+      offer,parking,type,furnished,
+    }).sort({[sort]:order}).limit(limit).skip(startindex)
+
+    return res.status(200).json(listing)
+  } catch (error) {
+    res.status(500).json({
+      message: "Server Error",
+      success: false,
+      data:updateList
+    });
+  }
+}
