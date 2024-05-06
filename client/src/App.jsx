@@ -18,11 +18,12 @@ function App() {
         <Route path="/" element={<Home />}></Route>
         <Route path="/signin" element={<Signin />}></Route>
         <Route path="/Signup" element={<Signup />}></Route>
+        <Route path="/listing/:id" element={<ListingPage/>}></Route>
         <Route element={ <PrivateRoute/>}>
         <Route path="/profile" element={<Profile />}></Route>
         <Route path="/create-listing" element={<CreateListing/>}></Route>
         <Route path="/update-listing/:id" element={<EditListinh/>}></Route>
-        <Route path="/listing/:id" element={<ListingPage/>}></Route>
+   
         </Route>
       
         <Route path="/About" element={<About />}></Route>

@@ -42,6 +42,7 @@ export const deleteListing = async (req, res, next) => {
   }
 };
 export const getList = async (req, res) => {
+  // console.log(req.params.id)
   const listing = await Listing.findById(req.params.id);
  // console.log(listing);
   try {
