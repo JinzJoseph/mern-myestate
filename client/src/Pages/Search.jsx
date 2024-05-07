@@ -1,11 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ListCard from "../Components/ListCard";
 
 const Search = () => {
   const navigate = useNavigate();
-  const [listing,SetListing]=useState("")
-  const[loading,SetLoading]=useState(false)
+  const [listing, SetListing] = useState("");
+  const [loading, SetLoading] = useState(false);
   const [sidebarData, SetSidebarData] = useState({
     searchTerm: "",
     type: "all",
@@ -15,7 +16,7 @@ const Search = () => {
     sort: "created_at",
     order: "desc",
   });
-  console.log(sidebarData);
+  //   console.log(sidebarData);
   const handleChange = (e) => {
     if (
       e.target.id === "all" ||
@@ -86,7 +87,7 @@ const Search = () => {
       sortFromUrl ||
       orderFromUrl
     ) {
-        SetSidebarData({
+      SetSidebarData({
         searchterm: searchTermFromUrl || "",
         type: typeFromUrl || "all",
         parking: parkingFromUrl === "true" ? true : false,
@@ -97,20 +98,20 @@ const Search = () => {
       });
     }
     const fetchData = async () => {
-        SetLoading(true);
-        try {
-          const urlparams = new URLSearchParams(location.search);
-          const searchQuery = urlparams.toString();
-          const res = await axios.get(`/api/list/get?${searchQuery}`);
-          console.log(res);
-         // SetListing(res.data);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        } finally {
-          SetLoading(false);
-        }
-      };
-      fetchData();
+      SetLoading(true);
+      try {
+        const urlparams = new URLSearchParams(location.search);
+        const searchQuery = urlparams.toString();
+        const res = await axios.get(`/api/list/get?${searchQuery}`);
+        // console.log(res);
+        SetListing(res.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        SetLoading(false);
+      }
+    };
+    fetchData();
   }, [location.search]);
 
   return (
@@ -217,6 +218,18 @@ const Search = () => {
         <h1 className="text-3xl font-semibold p-3 text-slate-700 mt-4">
           Listing Results:
         </h1>
+        <div className="p-7 flex flex-wrap gap-4">
+          {/* {!loading && (
+            <p className="text-xl text-slate-700 text-center w-full">
+              Loading...
+            </p>
+          )} */}
+          {!loading &&
+            listing &&
+            listing.map((listing) => (
+              <ListCard key={listing._id} listing={listing} />
+            ))}
+        </div>
       </div>
     </div>
   );
